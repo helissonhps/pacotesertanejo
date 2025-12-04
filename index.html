@@ -1,1 +1,60 @@
-<!-- arquivo inicial -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Índice de Arquivos TXT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin: 6px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Arquivos disponíveis</h1>
+    <p>Lista automática dos arquivos da pasta <strong>textos/</strong>.</p>
+    <ul id="lista"></ul>
+
+    <script>
+        const repo = "helissonhps/pacotesertanejo";  
+        const pasta = "textos";
+
+        fetch(`https://api.github.com/repos/${repo}/contents/${pasta}`)
+            .then(response => response.json())
+            .then(arquivos => {
+                const lista = document.getElementById("lista");
+
+                arquivos.forEach(arq => {
+                    if (arq.name.endsWith(".txt")) {
+                        const li = document.createElement("li");
+
+                        const link = document.createElement("a");
+                        link.href = arq.download_url;
+                        link.textContent = arq.name;
+                        link.target = "_blank";
+
+                        li.appendChild(link);
+                        lista.appendChild(li);
+                    }
+                });
+            })
+            .catch(err => {
+                document.getElementById("lista").innerHTML = 
+                    "<li>Erro ao carregar arquivos. Verifique se a pasta 'textos' existe.</li>";
+                console.error(err);
+            });
+    </script>
+
+</body>
+</html>
